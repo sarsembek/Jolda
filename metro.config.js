@@ -1,4 +1,4 @@
-const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 const { withNativeWind } = require('nativewind/metro');
 
 /**
@@ -7,6 +7,8 @@ const { withNativeWind } = require('nativewind/metro');
  *
  * @type {import('metro-config').MetroConfig}
  */
-const config = mergeConfig(getDefaultConfig(__dirname), config);
-
-module.exports = withNativeWind(config, { input: './global.css' });
+module.exports = withNativeWind(
+  mergeConfig(getDefaultConfig(__dirname), {
+    // ...existing code...
+  })
+);

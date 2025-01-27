@@ -1,7 +1,4 @@
 module.exports = {
-  presets: [
-    ['babel-preset-expo', { jsxImportSource: 'nativewind' }],
-    'nativewind/babel',
-  ],
+  presets: ['module:metro-react-native-babel-preset'],
   plugins: ['nativewind/babel'],
 };
