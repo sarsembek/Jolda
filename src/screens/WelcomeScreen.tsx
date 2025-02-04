@@ -1,10 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, SafeAreaView, useColorScheme } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Logo from '../components/Logo';
-import AppButton from '../components/AppButton'; // adjust the path as needed
+import AppButton from '../components/AppButton';
+import { RootStackParamList } from '../core/types/RootStackParamList.type';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const WelcomeScreen = (): React.JSX.Element => {
-  const colorScheme = useColorScheme(); // 'dark' or 'light'
+  const colorScheme = useColorScheme();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'Welcome'>>();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -16,35 +20,24 @@ const WelcomeScreen = (): React.JSX.Element => {
         {/* Dark overlay */}
         <View style={styles.overlay}>
           <View style={styles.topSection}>
-            <Text style={styles.topText}>
+            <Text style={[styles.topText]}>
               Твоя дорога начинается здесь!
             </Text>
           </View>
-          <View
-            style={[
-              styles.authContainer,
-              { backgroundColor: colorScheme === 'dark' ? '#333' : '#fff' },
-            ]}
-          >
+          <View style={[styles.authContainer, colorScheme === 'dark' ? styles.authContainerDark : styles.authContainerLight]}>
             <Logo />
-            <Text
-              style={[styles.welcomeText, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}
-            >
+            <Text style={[styles.welcomeText, colorScheme === 'dark' ? styles.textDark : styles.textLight]}>
               Добро пожаловать
             </Text>
             <AppButton
               title="Зарегистрироваться"
-              onPress={() => {
-                // handle registration
-              }}
+              onPress={() => navigation.navigate('Register')}
               type="primary"
             />
             <Text style={styles.orText}>или</Text>
             <AppButton
               title="Войти"
-              onPress={() => {
-                // handle login
-              }}
+              onPress={() => navigation.navigate('Login')}
               type="outline"
             />
           </View>
@@ -78,8 +71,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Unbounded-Bold',
     fontSize: 40,
     fontWeight: 'bold',
-    color: 'white',
     marginHorizontal: 32,
+    color: '#fff',
   },
   authContainer: {
     flex: 0.4, // 40% of the overlay's height
@@ -89,7 +82,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     gap: 8,
   },
   welcomeText: {
@@ -102,6 +95,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#71717a',
     marginVertical: 8,
+  },
+  // Dark mode styles
+  textDark: {
+    color: '#fff',
+  },
+  authContainerDark: {
+    backgroundColor: '#333',
+  },
+  // Light mode styles
+  textLight: {
+    color: '#000',
+  },
+  authContainerLight: {
+    backgroundColor: '#fff',
   },
 });
 
