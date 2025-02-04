@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Audiowide-Regular.ttf",
+      "sha1": "651503b7a0a89f49f78f14d04c62f811853573cd"
+    },
+    {
+      "path": "assets/fonts/Unbounded-Bold.ttf",
+      "sha1": "fc20bf316963025d4bd89e513fff20b27c18d8ad"
+    }
+  ]
+}
