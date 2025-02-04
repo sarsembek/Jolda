@@ -1,42 +1,88 @@
-import React from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import React, { useState, ReactElement } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 
-export type ButtonType = 'primary' | 'outline';
+export type ButtonType = 'primary' | 'outline' | 'icon';
 
 interface AppButtonProps {
-  title: string;
+  title?: string;
   onPress: () => void;
   type?: ButtonType;
+  children?: ReactElement<{ color?: string }>; // Ensure children accept `color`
 }
 
-const AppButton: React.FC<AppButtonProps> = ({ title, onPress, type = 'primary' }) => {
-  const containerStyle =
-    type === 'primary' ? styles.primaryContainer : styles.outlineContainer;
+const AppButton: React.FC<AppButtonProps> = ({ title, onPress, type = 'primary', children }) => {
+  const [isPressed, setIsPressed] = useState(false);
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
 
-  const buttonColor = type === 'primary' ? '#fff' : '#007bff';
+  const containerStyle = [
+    styles.button,
+    type === 'primary' ? styles.primaryButton : styles.outlineButton,
+    type === 'icon' && {
+      ...styles.iconButton,
+      backgroundColor: isPressed ? (isDarkMode ? '#555' : '#D1D5DB') : 'transparent',
+    },
+  ];
+
+  const textStyle = [
+    styles.buttonText,
+    type === 'outline' && styles.outlineText,
+    type === 'icon' && { color: isDarkMode ? '#fff' : '#007bff' },
+  ];
 
   return (
-    <View style={containerStyle}>
-      <Button title={title} onPress={onPress} color={buttonColor} />
-    </View>
+    <TouchableOpacity
+      style={containerStyle}
+      onPress={onPress}
+      activeOpacity={0.7}
+      onPressIn={() => setIsPressed(true)}
+      onPressOut={() => setIsPressed(false)}
+    >
+      <View style={styles.content}>
+        {children && React.isValidElement(children) ? React.cloneElement(children, { color: isDarkMode ? '#fff' : '#000' }) : null}
+        {title && <Text style={textStyle}>{title}</Text>}
+      </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  primaryContainer: {
-    backgroundColor: '#007bff',
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 32,
-    overflow: 'hidden', // ensure the border radius clips the Button
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     width: '100%',
-    paddingVertical: 8,
   },
-  outlineContainer: {
+  primaryButton: {
+    backgroundColor: '#007bff',
+  },
+  outlineButton: {
     borderWidth: 1,
     borderColor: '#007bff',
-    borderRadius: 32,
-    overflow: 'hidden',
-    width: '100%',
+    backgroundColor: 'transparent',
+  },
+  iconButton: {
+    backgroundColor: 'transparent',
     paddingVertical: 8,
+    paddingHorizontal: 8,
+    width: 'auto',
+    borderRadius: 16,
+    borderColor: '#E3E5E5',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  outlineText: {
+    color: '#007bff',
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

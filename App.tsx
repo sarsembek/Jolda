@@ -15,7 +15,7 @@ const App = (): React.JSX.Element => {
 
   return (
     <NavigationContainer>
-      <View style={{ flex: 1, backgroundColor: isDarkMode ? '#333' : '#fff' }}>
+      <View style={{ flex: 1, backgroundColor: isDarkMode ? '#212121' : '#fff' }}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Welcome" component={WelcomeScreen} />

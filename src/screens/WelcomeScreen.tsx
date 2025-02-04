@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   authContainerDark: {
-    backgroundColor: '#333',
+    backgroundColor: '#212121',
   },
   // Light mode styles
   textLight: {
