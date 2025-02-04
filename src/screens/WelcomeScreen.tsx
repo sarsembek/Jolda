@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, SafeAreaView, useColorScheme } from 'react-native';
 import Logo from '../components/Logo';
 import AppButton from '../components/AppButton'; // adjust the path as needed
 
 const WelcomeScreen = (): React.JSX.Element => {
+  const colorScheme = useColorScheme(); // 'dark' or 'light'
+
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
@@ -18,9 +20,18 @@ const WelcomeScreen = (): React.JSX.Element => {
               Твоя дорога начинается здесь!
             </Text>
           </View>
-          <View style={styles.authContainer}>
+          <View
+            style={[
+              styles.authContainer,
+              { backgroundColor: colorScheme === 'dark' ? '#333' : '#fff' },
+            ]}
+          >
             <Logo />
-            <Text style={styles.welcomeText}>Добро пожаловать</Text>
+            <Text
+              style={[styles.welcomeText, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}
+            >
+              Добро пожаловать
+            </Text>
             <AppButton
               title="Зарегистрироваться"
               onPress={() => {
@@ -46,11 +57,9 @@ const WelcomeScreen = (): React.JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-end',
   },
   imageBackground: {
-    flex: 1,
-    width: '100%',
+    ...StyleSheet.absoluteFillObject, // This makes the image cover the entire screen
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
@@ -61,7 +70,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   topSection: {
-    flex: 0.55, // Takes 55% of the overlay's height
+    flex: 0.6, // 60% of the overlay's height
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -71,11 +80,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
     marginHorizontal: 32,
-    textAlign: 'center',
   },
   authContainer: {
-    flex: 0.45, // Takes 45% of the overlay's height
-    backgroundColor: '#fff',
+    flex: 0.4, // 40% of the overlay's height
     width: '100%',
     paddingHorizontal: 36,
     paddingVertical: 36,
@@ -83,6 +90,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 32,
     alignItems: 'center',
     justifyContent: 'flex-start',
+    gap: 8,
   },
   welcomeText: {
     fontSize: 24,

@@ -1,5 +1,5 @@
 import React, { StrictMode } from 'react';
-import { useColorScheme, SafeAreaView, StatusBar } from 'react-native';
+import { useColorScheme, View, StatusBar } from 'react-native';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 
 function App(): React.JSX.Element {
@@ -13,10 +13,10 @@ function App(): React.JSX.Element {
 
   return (
     <StrictMode>
-      <SafeAreaView style={backgroundStyle}>
+      <View style={backgroundStyle}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
         <WelcomeScreen />
-      </SafeAreaView>
+      </View>
     </StrictMode>
   );
 }

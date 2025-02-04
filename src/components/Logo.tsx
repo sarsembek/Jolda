@@ -1,12 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 import LogoIcon from '../icons/Logo.icon';
 
 const Logo = () => {
+  const colorScheme = useColorScheme();
   return (
     <View style={styles.container}>
       <LogoIcon />
-      <Text style={styles.text}>OLDA</Text>
+      <Text style={[styles.text, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>
+        OLDA
+      </Text>
     </View>
   );
 };
