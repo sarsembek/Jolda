@@ -6,6 +6,7 @@ const colors = {
   complementaryGray: '#EFEFEF',
   foregroundBlue: '#ADD1FF',
   success: '#28A745',
+  error: '#cc0000',
   white: '#fff',
   black: '#000',
 

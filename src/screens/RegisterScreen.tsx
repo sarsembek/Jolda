@@ -10,6 +10,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../core/types/RootStackParamList.type';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useTheme} from '../theme/ThemeContext';
+import colors from '../theme/colors';
 
 const RegisterScreen = () => {
   const navigation =
@@ -22,7 +23,7 @@ const RegisterScreen = () => {
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
         enableOnAndroid={true} // makes sure it works on Android too
-        extraScrollHeight={20} // adjust as needed for extra spacing
+        extraScrollHeight={10} // adjust as needed for extra spacing
         keyboardShouldPersistTaps="handled">
         {/* Header with Back Button */}
         <View style={styles.header}>
@@ -66,7 +67,7 @@ const RegisterScreen = () => {
               Уже есть аккаунт?{' '}
               <Text
                 style={styles.loginText}
-                onPress={() => navigation.navigate('Login')}>
+                onPress={() => navigation.replace('Login')}>
                 Войти
               </Text>
             </Text>
@@ -136,7 +137,7 @@ const getStyles = (theme: {
       color: theme.text,
     },
     loginText: {
-      color: theme.text, // Replace with an accent color if needed
+      color: colors.primary,
       fontWeight: 'bold',
     },
   });

@@ -1,48 +1,59 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, useColorScheme, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  useColorScheme,
+  TouchableOpacity,
+} from 'react-native';
 import EyeOffIcon from '../icons/EyeOff.icon';
 import EyeOnIcon from '../icons/EyeOn.icon';
 
 interface AppInputProps {
   label: string;
   placeholder: string;
-  secureTextEntry?: boolean; // Optional secure entry
-  onFocus?: () => void; // Added onFocus prop
+  secureTextEntry?: boolean;
+  onFocus?: () => void;
 }
 
 const AppInput: React.FC<AppInputProps> = ({
   label,
   placeholder,
   secureTextEntry = false,
-  onFocus, // Destructure the onFocus prop
+  onFocus,
 }) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
+  // Choose any color logic here (for dark/light or from a custom theme)
+  const textColor = isDarkMode ? '#FFFFFF' : '#000000';
+  const placeholderColor = isDarkMode ? '#CCCCCC' : '#888888';
+
   const [isFocused, setIsFocused] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(!secureTextEntry);
 
-  // Custom focus handler that also calls the passed in onFocus prop if provided
   const handleFocus = () => {
     setIsFocused(true);
-    if (onFocus) {
-      onFocus();
-    }
+    onFocus?.();
   };
 
   return (
     <View style={styles.container}>
       {/* Label */}
-      <Text style={[styles.label, { color: isDarkMode ? '#fff' : '#000' }]}>
-        {label}
-      </Text>
+      <Text style={[styles.label, { color: textColor }]}>{label}</Text>
 
       {/* Input Field */}
-      <View style={[styles.inputContainer, { borderColor: isFocused ? '#007bff' : '#E3E5E5' }]}>
+      <View
+        style={[
+          styles.inputContainer,
+          { borderColor: isFocused ? '#007bff' : '#E3E5E5' },
+        ]}
+      >
         <TextInput
-          style={[styles.input, { color: '#71717A' }]}
+          style={[styles.input, { color: textColor }]}
           placeholder={placeholder}
-          placeholderTextColor="#71717A"
+          placeholderTextColor={placeholderColor}
           secureTextEntry={!isPasswordVisible} // Toggle visibility
           onFocus={handleFocus}
           onBlur={() => setIsFocused(false)}

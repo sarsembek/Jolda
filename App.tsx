@@ -1,9 +1,11 @@
-// App.tsx
 import React from 'react';
-import { StatusBar, View, StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
-import { ThemeProvider, useTheme } from './src/theme/ThemeContext';
+import {StatusBar, View, StyleSheet} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+} from '@react-navigation/stack';
+import {ThemeProvider, useTheme} from './src/theme/ThemeContext';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
@@ -17,39 +19,63 @@ const AppContent = (): React.JSX.Element => {
 
   return (
     <View style={styles.container}>
+      {/* Use light or dark status bar depending on the theme */}
       <StatusBar barStyle={theme.isDark ? 'light-content' : 'dark-content'} />
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen 
-          name="Welcome" 
-          component={WelcomeScreen} 
+
+      <Stack.Navigator
+        initialRouteName="Welcome"
+        screenOptions={{
+          headerShown: false,
+        }}>
+        {/* 
+          WELCOME SCREEN 
+          - gestureEnabled: false prevents swiping back from Welcome to any “previous” screen
+          - This ensures the user can’t accidentally go back into a blank stack state.
+        */}
+        <Stack.Screen
+          name="Welcome"
+          component={WelcomeScreen}
           options={{
-            // Disable gestures so users cannot swipe back from the Welcome screen.
             gestureEnabled: false,
           }}
         />
-        <Stack.Screen 
-          name="Login" 
-          component={LoginScreen} 
+
+        {/* 
+          LOGIN SCREEN 
+          - Uses a horizontal transition
+          - Going “back” from here will return to Welcome
+        */}
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
           options={{
             gestureDirection: 'horizontal',
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           }}
         />
-        <Stack.Screen 
-          name="Register" 
-          component={RegisterScreen} 
+
+        {/* 
+          REGISTER SCREEN 
+          - Also uses a horizontal transition
+          - Going “back” from here will return to Welcome
+        */}
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
           options={{
             gestureDirection: 'horizontal',
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           }}
         />
+
+        {/* HOME SCREEN */}
         <Stack.Screen name="Home" component={HomeScreen} />
       </Stack.Navigator>
     </View>
   );
 };
 
-const getStyles = (theme: { background: string }) =>
+const getStyles = (theme: {background: string}) =>
   StyleSheet.create({
     container: {
       flex: 1,
