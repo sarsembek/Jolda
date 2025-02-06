@@ -63,6 +63,7 @@ const RegisterScreen = () => {
               // We provide the phone formatter & validator
               format={formatKazakhPhoneNumber}
               validate={validateKazakhPhoneNumber}
+              numeric={true}
             />
             <AppInput
               label="Почта"

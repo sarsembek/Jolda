@@ -1,5 +1,3 @@
-// AppInput.tsx
-
 import React, { useState } from 'react';
 import {
   View,
@@ -28,6 +26,10 @@ interface AppInputProps {
    * It should return an error string if invalid, or '' if valid.
    */
   validate?: (value: string) => string;
+  /**
+   * If true, uses a numeric keyboard (digits only).
+   */
+  numeric?: boolean;
 }
 
 const AppInput: React.FC<AppInputProps> = ({
@@ -37,6 +39,7 @@ const AppInput: React.FC<AppInputProps> = ({
   onFocus,
   format,
   validate,
+  numeric = false,
 }) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
@@ -101,6 +104,8 @@ const AppInput: React.FC<AppInputProps> = ({
           onBlur={handleBlur}
           onChangeText={handleChangeText}
           value={value}
+          // Use a numeric keyboard if numeric is true
+          keyboardType={numeric ? 'number-pad' : 'default'}
         />
 
         {/* Toggle password visibility (if secureTextEntry) */}

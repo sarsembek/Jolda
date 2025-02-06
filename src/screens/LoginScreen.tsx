@@ -72,6 +72,7 @@ const LoginScreen = () => {
               // For phone, use phone format/validate; for email, no format + email validate.
               format={isPhone ? formatKazakhPhoneNumber : undefined}
               validate={isPhone ? validateKazakhPhoneNumber : validateEmail}
+              numeric={isPhone ? true : false}
             />
 
             {/* Password */}
