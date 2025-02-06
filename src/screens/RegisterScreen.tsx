@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import AppButton from '../components/AppButton';
@@ -13,22 +13,76 @@ import {useTheme} from '../theme/ThemeContext';
 import colors from '../theme/colors';
 import {
   formatKazakhPhoneNumber,
-  validateEmail,
   validateKazakhPhoneNumber,
+  validateEmail,
 } from '../utils/validate';
 
 const RegisterScreen = () => {
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, 'Register'>>();
   const theme = useTheme();
+
+  // Controlled inputs & errors
+  const [firstName, setFirstName] = useState('');
+  const [firstNameError, setFirstNameError] = useState('');
+
+  const [lastName, setLastName] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
+
+  const [phone, setPhone] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+
+  // Handle the registration button
+  const handleRegister = () => {
+    // Clear any old errors
+    setFirstNameError('');
+    setLastNameError('');
+    setPhoneError('');
+    setEmailError('');
+
+    let hasError = false;
+
+    // Check if fields are empty (or do deeper validation, if needed)
+    if (!firstName.trim()) {
+      setFirstNameError('Заполните имя');
+      hasError = true;
+    }
+    if (!lastName.trim()) {
+      setLastNameError('Заполните фамилию');
+      hasError = true;
+    }
+    if (!phone.trim()) {
+      setPhoneError('Укажите номер телефона');
+      hasError = true;
+    }
+    if (!email.trim()) {
+      setEmailError('Укажите почту');
+      hasError = true;
+    }
+
+    // If any required field is empty, stop
+    if (hasError) return;
+
+    // Otherwise, proceed (e.g., call an API)
+    console.log('Register pressed with:', {
+      firstName,
+      lastName,
+      phone,
+      email,
+    });
+  };
+
   const styles = getStyles(theme);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: theme.background}}>
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
-        enableOnAndroid={true} // makes sure it works on Android too
-        extraScrollHeight={10} // adjust as needed for extra spacing
+        enableOnAndroid={true}
+        extraScrollHeight={10}
         keyboardShouldPersistTaps="handled">
         {/* Header with Back Button */}
         <View style={styles.header}>
@@ -54,21 +108,49 @@ const RegisterScreen = () => {
 
           {/* Input Fields */}
           <View style={styles.inputContainer}>
-            <AppInput label="Имя" placeholder="Ваше имя" />
-            <AppInput label="Фамилия" placeholder="Ваша фамилия" />
+            <AppInput
+              label="Имя"
+              placeholder="Ваше имя"
+              value={firstName}
+              onChangeValue={val => {
+                setFirstName(val);
+                if (firstNameError) setFirstNameError('');
+              }}
+              parentError={firstNameError}
+            />
+            <AppInput
+              label="Фамилия"
+              placeholder="Ваша фамилия"
+              value={lastName}
+              onChangeValue={val => {
+                setLastName(val);
+                if (lastNameError) setLastNameError('');
+              }}
+              parentError={lastNameError}
+            />
             <AppInput
               label="Номер телефона"
-              // This shows as a placeholder while empty
               placeholder="+7 (777) 777 77 77"
-              // We provide the phone formatter & validator
               format={formatKazakhPhoneNumber}
               validate={validateKazakhPhoneNumber}
-              numeric={true}
+              numeric
+              value={phone}
+              onChangeValue={val => {
+                setPhone(val);
+                if (phoneError) setPhoneError('');
+              }}
+              parentError={phoneError}
             />
             <AppInput
               label="Почта"
               placeholder="Введите вашу почту"
               validate={validateEmail}
+              value={email}
+              onChangeValue={val => {
+                setEmail(val);
+                if (emailError) setEmailError('');
+              }}
+              parentError={emailError}
             />
           </View>
 
@@ -76,7 +158,7 @@ const RegisterScreen = () => {
           <View style={styles.footer}>
             <AppButton
               title="Зарегистрироваться"
-              onPress={() => console.log('Register pressed')}
+              onPress={handleRegister}
               type="primary"
             />
             <Text style={styles.orText}>или</Text>
@@ -95,6 +177,8 @@ const RegisterScreen = () => {
   );
 };
 
+export default RegisterScreen;
+
 const getStyles = (theme: {
   background: string;
   text: string;
@@ -105,7 +189,7 @@ const getStyles = (theme: {
       flexGrow: 1,
       paddingHorizontal: 32,
       backgroundColor: theme.background,
-      paddingBottom: 32, // ensure there's some bottom padding for the keyboard
+      paddingBottom: 32,
     },
     header: {
       alignItems: 'flex-start',
@@ -157,5 +241,3 @@ const getStyles = (theme: {
       fontWeight: 'bold',
     },
   });
-
-export default RegisterScreen;
