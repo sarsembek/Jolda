@@ -11,6 +11,11 @@ import {RootStackParamList} from '../core/types/RootStackParamList.type';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useTheme} from '../theme/ThemeContext';
 import colors from '../theme/colors';
+import {
+  formatKazakhPhoneNumber,
+  validateEmail,
+  validateKazakhPhoneNumber,
+} from '../utils/validate';
 
 const RegisterScreen = () => {
   const navigation =
@@ -51,8 +56,19 @@ const RegisterScreen = () => {
           <View style={styles.inputContainer}>
             <AppInput label="Имя" placeholder="Ваше имя" />
             <AppInput label="Фамилия" placeholder="Ваша фамилия" />
-            <AppInput label="Номер телефона" placeholder="Ваш номер телефона" />
-            <AppInput label="Почта" placeholder="Введите вашу почту" />
+            <AppInput
+              label="Номер телефона"
+              // This shows as a placeholder while empty
+              placeholder="+7 (777) 777 77 77"
+              // We provide the phone formatter & validator
+              format={formatKazakhPhoneNumber}
+              validate={validateKazakhPhoneNumber}
+            />
+            <AppInput
+              label="Почта"
+              placeholder="Введите вашу почту"
+              validate={validateEmail}
+            />
           </View>
 
           {/* Register Button, orText, and Already Have Account */}
@@ -92,13 +108,12 @@ const getStyles = (theme: {
     },
     header: {
       alignItems: 'flex-start',
-      marginBottom: 16,
     },
     innerContainer: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      marginBottom: 32,
+      marginVertical: 32,
     },
     logoContainer: {
       alignItems: 'center',

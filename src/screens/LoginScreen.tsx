@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, { useState } from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -11,20 +11,36 @@ import AppInput from '../components/AppInput';
 import {useTheme} from '../theme/ThemeContext';
 import colors from '../theme/colors';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {
+  formatKazakhPhoneNumber,
+  validateKazakhPhoneNumber,
+  validateEmail, // Make sure to import this
+} from '../utils/validate';
 
 const LoginScreen = () => {
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, 'Login'>>();
   const theme = useTheme();
+
+  // 1) State to track whether we're using phone or email
+  // Initially false => use "email" mode
+  const [isPhone, setIsPhone] = useState(false);
+
+  // 2) Toggle function
+  const toggleAuthType = () => {
+    setIsPhone(!isPhone);
+  };
+
   const styles = getStyles(theme);
 
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAwareScrollView
         contentContainerStyle={styles.scrollContainer}
-        enableOnAndroid={true} // ensures it also works on Android
-        extraScrollHeight={10} // increase for more space above the keyboard
-        keyboardShouldPersistTaps="handled">
+        enableOnAndroid={true}
+        extraScrollHeight={10}
+        keyboardShouldPersistTaps="handled"
+      >
         {/* Back Button */}
         <View style={styles.header}>
           <AppButton onPress={() => navigation.goBack()} type="icon">
@@ -47,29 +63,52 @@ const LoginScreen = () => {
             </Text>
           </View>
 
-          {/* Input Fields */}
+          {/* INPUT FIELDS */}
           <View style={styles.inputContainer}>
-            {/* Pass style={{ color: theme.text }} (or whatever prop your AppInput uses for text style) */}
-            <AppInput label="Номер телефона" placeholder="Номер телефона" />
+            {/* Conditionally switch between Email vs. Phone */}
+            <AppInput
+              label={isPhone ? 'Номер телефона' : 'Почта'}
+              placeholder={isPhone ? '+7 (777) 777 77 77' : 'Email'}
+              // For phone, use phone format/validate; for email, no format + email validate.
+              format={isPhone ? formatKazakhPhoneNumber : undefined}
+              validate={isPhone ? validateKazakhPhoneNumber : validateEmail}
+            />
+
+            {/* Password */}
             <AppInput label="Пароль" placeholder="Пароль" secureTextEntry />
 
-            {/* Forgot Password */}
-            <Text style={styles.forgotPassword}>Забыли пароль?</Text>
+            <View style={styles.bottomContainer}>
+              {/* Toggle link: switches phone/email mode */}
+              <TouchableOpacity onPress={toggleAuthType}>
+                <Text style={styles.loginWithEmail}>
+                  {isPhone ? 'Войти по почте' : 'Войти по телефону'}
+                </Text>
+              </TouchableOpacity>
+
+              {/* Forgot Password - aligned to the right */}
+              <TouchableOpacity
+                style={styles.forgotPasswordContainer}
+                onPress={() => console.log('Forgot Password pressed')}
+              >
+                <Text style={styles.forgotPassword}>Забыли пароль?</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
-          {/* Login Button */}
+          {/* LOGIN BUTTON */}
           <AppButton
             title="Войти"
             onPress={() => console.log('Login pressed')}
             type="primary"
           />
 
-          {/* Already Have an Account */}
+          {/* ALREADY HAVE AN ACCOUNT? */}
           <Text style={styles.noAccountText}>
             Нету аккаунта?{' '}
             <Text
               style={styles.registerText}
-              onPress={() => navigation.replace('Register')}>
+              onPress={() => navigation.replace('Register')}
+            >
               Зарегистрироваться
             </Text>
           </Text>
@@ -91,17 +130,16 @@ const getStyles = (theme: {background: string; text: string}) =>
     },
     header: {
       alignItems: 'flex-start',
-      marginBottom: 16,
     },
     innerContainer: {
       flexGrow: 1,
       alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 32,
+      justifyContent: 'flex-start',
+      marginVertical: 32,
     },
     logoContainer: {
       alignItems: 'center',
-      marginBottom: 24,
+      marginBottom: 12,
     },
     titleContainer: {
       width: '100%',
@@ -124,20 +162,32 @@ const getStyles = (theme: {background: string; text: string}) =>
       gap: 12,
       marginBottom: 20,
     },
+    loginWithEmail: {
+      fontSize: 14,
+      color: colors.primary,
+    },
+    forgotPasswordContainer: {
+      // intentionally empty
+    },
     forgotPassword: {
-      alignSelf: 'flex-end',
       fontSize: 14,
       color: theme.text,
-      marginBottom: 24,
+      textDecorationLine: 'underline',
     },
     noAccountText: {
       fontSize: 14,
       color: theme.text,
       marginTop: 32,
+      textAlign: 'center',
     },
     registerText: {
       color: colors.primary,
       fontWeight: 'bold',
+    },
+    bottomContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
     },
   });
 
