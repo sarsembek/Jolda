@@ -1,14 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, SafeAreaView, useColorScheme } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Logo from '../components/Logo';
 import AppButton from '../components/AppButton';
 import { RootStackParamList } from '../core/types/RootStackParamList.type';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useTheme } from '../theme/ThemeContext';
 
 const WelcomeScreen = (): React.JSX.Element => {
-  const colorScheme = useColorScheme();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'Welcome'>>();
+  const theme = useTheme();
+  const styles = getStyles(theme);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -20,13 +22,13 @@ const WelcomeScreen = (): React.JSX.Element => {
         {/* Dark overlay */}
         <View style={styles.overlay}>
           <View style={styles.topSection}>
-            <Text style={[styles.topText]}>
+            <Text style={styles.topText}>
               Твоя дорога начинается здесь!
             </Text>
           </View>
-          <View style={[styles.authContainer, colorScheme === 'dark' ? styles.authContainerDark : styles.authContainerLight]}>
+          <View style={styles.authContainer}>
             <Logo />
-            <Text style={[styles.welcomeText, colorScheme === 'dark' ? styles.textDark : styles.textLight]}>
+            <Text style={styles.welcomeText}>
               Добро пожаловать
             </Text>
             <AppButton
@@ -47,69 +49,58 @@ const WelcomeScreen = (): React.JSX.Element => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  imageBackground: {
-    ...StyleSheet.absoluteFillObject, // This makes the image cover the entire screen
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  overlay: {
-    flex: 1,
-    width: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', // 60% dark overlay
-    flexDirection: 'column',
-  },
-  topSection: {
-    flex: 0.6, // 60% of the overlay's height
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  topText: {
-    fontFamily: 'Unbounded-Bold',
-    fontSize: 40,
-    fontWeight: 'bold',
-    marginHorizontal: 32,
-    color: '#fff',
-  },
-  authContainer: {
-    flex: 0.4, // 40% of the overlay's height
-    width: '100%',
-    paddingHorizontal: 36,
-    paddingVertical: 36,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  welcomeText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  orText: {
-    marginHorizontal: 10,
-    fontSize: 16,
-    color: '#71717a',
-    marginVertical: 8,
-  },
-  // Dark mode styles
-  textDark: {
-    color: '#fff',
-  },
-  authContainerDark: {
-    backgroundColor: '#212121',
-  },
-  // Light mode styles
-  textLight: {
-    color: '#000',
-  },
-  authContainerLight: {
-    backgroundColor: '#fff',
-  },
-});
+const getStyles = (theme: { isDark: boolean; text: string }) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    imageBackground: {
+      ...StyleSheet.absoluteFillObject,
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+    },
+    overlay: {
+      flex: 1,
+      width: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.6)', // A consistent dark overlay
+      flexDirection: 'column',
+    },
+    topSection: {
+      flex: 0.6,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    topText: {
+      fontFamily: 'Unbounded-Bold',
+      fontSize: 40,
+      fontWeight: 'bold',
+      marginHorizontal: 32,
+      color: '#fff', // Remains white for strong contrast with the overlay
+    },
+    authContainer: {
+      flex: 0.4,
+      width: '100%',
+      paddingHorizontal: 36,
+      paddingVertical: 36,
+      borderTopLeftRadius: 32,
+      borderTopRightRadius: 32,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      backgroundColor: theme.isDark ? '#212121' : '#fff',
+    },
+    welcomeText: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 16,
+      color: theme.text,
+    },
+    orText: {
+      marginHorizontal: 10,
+      fontSize: 16,
+      color: theme.text,
+      marginVertical: 8,
+    },
+  });
 
 export default WelcomeScreen;

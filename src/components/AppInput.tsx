@@ -7,14 +7,28 @@ interface AppInputProps {
   label: string;
   placeholder: string;
   secureTextEntry?: boolean; // Optional secure entry
+  onFocus?: () => void; // Added onFocus prop
 }
 
-const AppInput: React.FC<AppInputProps> = ({ label, placeholder, secureTextEntry = false }) => {
+const AppInput: React.FC<AppInputProps> = ({
+  label,
+  placeholder,
+  secureTextEntry = false,
+  onFocus, // Destructure the onFocus prop
+}) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
   const [isFocused, setIsFocused] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(!secureTextEntry);
+
+  // Custom focus handler that also calls the passed in onFocus prop if provided
+  const handleFocus = () => {
+    setIsFocused(true);
+    if (onFocus) {
+      onFocus();
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -30,13 +44,16 @@ const AppInput: React.FC<AppInputProps> = ({ label, placeholder, secureTextEntry
           placeholder={placeholder}
           placeholderTextColor="#71717A"
           secureTextEntry={!isPasswordVisible} // Toggle visibility
-          onFocus={() => setIsFocused(true)}
+          onFocus={handleFocus}
           onBlur={() => setIsFocused(false)}
         />
 
         {/* Password Visibility Toggle */}
         {secureTextEntry && (
-          <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={styles.iconContainer}>
+          <TouchableOpacity
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+            style={styles.iconContainer}
+          >
             {isPasswordVisible ? <EyeOnIcon /> : <EyeOffIcon />}
           </TouchableOpacity>
         )}
