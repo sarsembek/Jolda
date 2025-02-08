@@ -1,12 +1,8 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
+import { IconProps } from '../core/interface/icon.interface';
 
-interface EyeOnIconProps {
-  size?: number;
-  color?: string;
-}
-
-const EyeOnIcon: React.FC<EyeOnIconProps> = ({ size = 24, color = '#71717A' }) => {
+const EyeOnIcon: React.FC<IconProps> = ({ size = 24, color = '#71717A' }) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <Path

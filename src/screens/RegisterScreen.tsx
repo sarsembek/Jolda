@@ -87,7 +87,7 @@ const RegisterScreen = () => {
         {/* Header with Back Button */}
         <View style={styles.header}>
           <AppButton onPress={() => navigation.goBack()} type="icon">
-            <ChevronLeftIcon />
+            <ChevronLeftIcon size={32}/>
           </AppButton>
         </View>
 
@@ -187,7 +187,7 @@ const getStyles = (theme: {
   StyleSheet.create({
     container: {
       flexGrow: 1,
-      paddingHorizontal: 32,
+      paddingHorizontal: 24,
       backgroundColor: theme.background,
       paddingBottom: 32,
     },
@@ -198,7 +198,7 @@ const getStyles = (theme: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      marginVertical: 32,
+      marginTop: 16,
     },
     logoContainer: {
       alignItems: 'center',

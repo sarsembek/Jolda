@@ -10,7 +10,7 @@ const colors = {
   white: '#fff',
   black: '#000',
 
-  backgroundDark: '#212121',     // Dark mode background
+  backgroundDark: '#121212',     // Dark mode background
   backgroundLight: '#FFFFFF',    // Light mode background
   textPrimary: '#FFFFFF',        // Text color for dark mode (on dark backgrounds)
   textSecondary: '#000000',      // Text color for light mode (on light backgrounds)

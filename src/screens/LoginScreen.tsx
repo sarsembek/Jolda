@@ -79,7 +79,7 @@ const LoginScreen = () => {
         {/* Back Button */}
         <View style={styles.header}>
           <AppButton onPress={() => navigation.goBack()} type="icon">
-            <ChevronLeftIcon />
+            <ChevronLeftIcon size={32}/>
           </AppButton>
         </View>
 
@@ -175,7 +175,7 @@ const getStyles = (theme: {background: string; text: string}) =>
     },
     scrollContainer: {
       flexGrow: 1,
-      paddingHorizontal: 32,
+      paddingHorizontal: 24,
     },
     header: {
       alignItems: 'flex-start',
@@ -184,7 +184,7 @@ const getStyles = (theme: {background: string; text: string}) =>
       flexGrow: 1,
       alignItems: 'center',
       justifyContent: 'flex-start',
-      marginVertical: 32,
+      marginTop: 16,
     },
     logoContainer: {
       alignItems: 'center',
