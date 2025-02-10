@@ -7,17 +7,23 @@ interface AppButtonProps {
   title?: string;
   onPress: () => void;
   type?: ButtonType;
-  children?: ReactElement<{ color?: string }>; // Ensure children accept `color`
+  children?: ReactElement<{ color?: string }>;
 }
 
-const AppButton: React.FC<AppButtonProps> = ({ title, onPress, type = 'primary', children }) => {
+const AppButton: React.FC<AppButtonProps> = ({
+  title,
+  onPress,
+  type = 'primary',
+  children,
+}) => {
   const [isPressed, setIsPressed] = useState(false);
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
   const containerStyle = [
     styles.button,
-    type === 'primary' ? styles.primaryButton : styles.outlineButton,
+    type === 'primary' && styles.primaryButton,
+    type === 'outline' && styles.outlineButton,
     type === 'icon' && {
       ...styles.iconButton,
       backgroundColor: isPressed ? (isDarkMode ? '#555' : '#D1D5DB') : 'transparent',
@@ -39,7 +45,9 @@ const AppButton: React.FC<AppButtonProps> = ({ title, onPress, type = 'primary',
       onPressOut={() => setIsPressed(false)}
     >
       <View style={styles.content}>
-        {children && React.isValidElement(children) ? React.cloneElement(children, { color: isDarkMode ? '#fff' : '#000' }) : null}
+        {children && React.isValidElement(children)
+          ? React.cloneElement(children, { color: isDarkMode ? '#fff' : '#000' })
+          : null}
         {title && <Text style={textStyle}>{title}</Text>}
       </View>
     </TouchableOpacity>
@@ -70,7 +78,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     width: 'auto',
     borderRadius: 16,
-    borderColor: '#E3E5E5',
+    // Remove border for icon type
+    borderWidth: 0,
   },
   buttonText: {
     color: '#fff',

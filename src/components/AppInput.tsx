@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// AppInput.tsx
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -14,18 +15,27 @@ import colors from '../theme/colors';
 interface AppInputProps {
   label: string;
   placeholder: string;
+  /** Value controlled by the parent */
+  value: string;
+  /** Callback to update parent's state */
+  onChangeValue: (val: string) => void;
+  /** An error string from the parent (e.g., "Field is required") */
+  parentError?: string;
+
   secureTextEntry?: boolean;
   onFocus?: () => void;
   /**
    * A function to format the user's input (phone, etc.).
-   * If provided, we call it on each text change.
+   * Called on each text change.
    */
   format?: (value: string) => string;
   /**
-   * A function to validate the user's input.
-   * It should return an error string if invalid, or '' if valid.
+   * A function to validate the user's input (if you want).
+   * Returns an error string if invalid, or '' if valid.
+   * We'll show it only if there's no parentError, for example.
    */
   validate?: (value: string) => string;
+
   /**
    * If true, uses a numeric keyboard (digits only).
    */
@@ -35,6 +45,10 @@ interface AppInputProps {
 const AppInput: React.FC<AppInputProps> = ({
   label,
   placeholder,
+  value,
+  onChangeValue,
+  parentError,
+
   secureTextEntry = false,
   onFocus,
   format,
@@ -47,32 +61,34 @@ const AppInput: React.FC<AppInputProps> = ({
   const textColor = isDarkMode ? '#FFFFFF' : '#000000';
   const placeholderColor = isDarkMode ? '#CCCCCC' : '#888888';
 
-  const [value, setValue] = useState('');
-  const [error, setError] = useState('');
+  // We'll store local validation error only if you'd like to show format/validate errors
+  const [localError, setLocalError] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  // For password toggling
   const [isPasswordVisible, setIsPasswordVisible] = useState(!secureTextEntry);
 
-  // Called whenever text changes
+  // Called whenever text changes in the TextInput
   const handleChangeText = (input: string) => {
-    // 1) Format (if provided)
+    // 1) Format if provided
     let formattedValue = input;
     if (format) {
       formattedValue = format(input);
     }
 
-    // 2) Validate (if provided)
+    // 2) Validate if provided
     let errorMessage = '';
     if (validate) {
       errorMessage = validate(formattedValue);
     }
+    setLocalError(errorMessage);
 
-    setValue(formattedValue);
-    setError(errorMessage);
+    // 3) Notify parent about the final string
+    onChangeValue(formattedValue);
   };
 
   const handleFocus = () => {
     setIsFocused(true);
-    // If using phone format, and the input is empty on focus, insert '7' so that +7 shows up immediately
+    // If using phone format, and the input is empty on focus, insert '7' so that +7 shows up
     if (format && !value) {
       handleChangeText('7');
     }
@@ -83,28 +99,31 @@ const AppInput: React.FC<AppInputProps> = ({
     setIsFocused(false);
   };
 
+  // Decide which error to display:
+  // - If the parent is forcing an error (e.g. "Field required"), show that first
+  // - Otherwise, show the local validation error from phone/email logic
+  const finalError = parentError || localError;
+
   return (
-    <View style={{ width: '100%', marginBottom: 16 }}>
+    <View style={{width: '100%', marginBottom: 16}}>
       {/* Label */}
-      <Text style={[styles.label, { color: textColor }]}>{label}</Text>
+      <Text style={[styles.label, {color: textColor}]}>{label}</Text>
 
       {/* Input Field Container */}
       <View
         style={[
           styles.inputContainer,
-          { borderColor: isFocused ? '#007bff' : '#E3E5E5' },
-        ]}
-      >
+          {borderColor: isFocused ? '#007bff' : '#E3E5E5'},
+        ]}>
         <TextInput
-          style={[styles.input, { color: textColor }]}
+          style={[styles.input, {color: textColor}]}
           placeholder={placeholder}
           placeholderTextColor={placeholderColor}
           secureTextEntry={!isPasswordVisible}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChangeText={handleChangeText}
-          value={value}
-          // Use a numeric keyboard if numeric is true
+          value={value} // fully controlled
           keyboardType={numeric ? 'number-pad' : 'default'}
         />
 
@@ -113,14 +132,14 @@ const AppInput: React.FC<AppInputProps> = ({
           <TouchableOpacity
             onPress={() => setIsPasswordVisible(!isPasswordVisible)}
             style={styles.iconContainer}
-          >
+            hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
             {isPasswordVisible ? <EyeOnIcon /> : <EyeOffIcon />}
           </TouchableOpacity>
         )}
       </View>
 
       {/* Error Text */}
-      {!!error && <Text style={styles.errorText}>{error}</Text>}
+      {!!finalError && <Text style={styles.errorText}>{finalError}</Text>}
     </View>
   );
 };

@@ -15,7 +15,7 @@ const WelcomeScreen = (): React.JSX.Element => {
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
-        source={require('../../assets/background.png')}
+        source={require('../../assets/images/background.png')}
         style={styles.imageBackground}
         resizeMode="cover"
       >
@@ -49,7 +49,7 @@ const WelcomeScreen = (): React.JSX.Element => {
   );
 };
 
-const getStyles = (theme: { isDark: boolean; text: string }) =>
+const getStyles = (theme: { isDark: boolean; text: string, background: string }) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -87,7 +87,7 @@ const getStyles = (theme: { isDark: boolean; text: string }) =>
       alignItems: 'center',
       justifyContent: 'center',
       gap: 8,
-      backgroundColor: theme.isDark ? '#212121' : '#fff',
+      backgroundColor: theme.background,
     },
     welcomeText: {
       fontSize: 24,
