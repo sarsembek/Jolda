@@ -1,4 +1,3 @@
-// src/hooks/useReverseGeocodeAddress.ts
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Config from 'react-native-config';
@@ -10,8 +9,7 @@ interface ReverseGeocodeResult {
 }
 
 /**
- * Given latitude and longitude, calls Google Maps Geocoding (lang=ru)
- * to retrieve an address built from street_number + route.
+ * Hook to fetch street name and number. Falls back to `formatted_address` if components are missing.
  */
 export function useReverseGeocodeAddress(
   lat: number | null,
@@ -22,7 +20,7 @@ export function useReverseGeocodeAddress(
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (lat == null || lng == null) return; // skip if no coords
+    if (lat == null || lng == null) return; // Skip if no coordinates
 
     const baseUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
     const apiKey = Config.GOOGLE_MAPS_API_KEY;
@@ -40,22 +38,23 @@ export function useReverseGeocodeAddress(
         if (data.status === 'OK' && data.results?.length > 0) {
           const components = data.results[0].address_components;
           let streetNumber = '';
-          let routeName = '';
+          let streetName = '';
 
-          // Attempt to extract 'street_number' + 'route'
+          // Extract 'route' (street name) and 'street_number'
           components.forEach((comp: any) => {
+            if (comp.types.includes('route')) {
+              streetName = comp.long_name;
+            }
             if (comp.types.includes('street_number')) {
               streetNumber = comp.long_name;
             }
-            if (comp.types.includes('route')) {
-              routeName = comp.long_name;
-            }
           });
 
-          if (streetNumber && routeName) {
-            setAddress(`${streetNumber} ${routeName}`);
+          // If we have both components, return "StreetNumber StreetName"
+          if (streetNumber && streetName) {
+            setAddress(`${streetName} ${streetNumber}`);
           } else {
-            // fallback to formatted_address
+            // Fallback: Use formatted_address from the API response
             setAddress(data.results[0].formatted_address);
           }
         } else {

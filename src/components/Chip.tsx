@@ -10,6 +10,7 @@ import {
   TextStyle,
 } from 'react-native';
 import { useTheme } from '../theme/ThemeContext';
+import colors from '../theme/colors';
 
 type ChipType = 'fill' | 'outline';
 type IconPosition = 'start' | 'end';
@@ -43,13 +44,13 @@ const Chip: React.FC<ChipProps> = ({
   if (type === 'fill') {
     // If it's dark mode, pick a slightly different fill color, etc.
     containerStyles.push({
-      backgroundColor: theme.isDark ? '#338BFB' : '#016FEE', // example: primary color variant
+      backgroundColor: theme.isDark ? colors.primaryLight : colors.primary, // example: primary color variant
     });
   } else if (type === 'outline') {
     containerStyles.push({
       backgroundColor: 'transparent',
       borderWidth: 1,
-      borderColor: theme.border, // from theme
+      borderColor: theme.border,
     });
   }
 
