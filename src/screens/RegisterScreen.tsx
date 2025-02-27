@@ -4,6 +4,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import AppButton from '../components/AppButton';
 import Logo from '../components/Logo';
 import AppInput from '../components/AppInput';
+import AppCheckbox from '../components/AppCheckbox';
 import ChevronLeftIcon from '../icons/ChevronLeft.icon';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -35,6 +36,15 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
 
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  
+  const [isChecked, setIsChecked] = useState(false);
+  const [checkboxError, setCheckboxError] = useState('');
+
   // Handle the registration button
   const handleRegister = () => {
     // Clear any old errors
@@ -42,6 +52,9 @@ const RegisterScreen = () => {
     setLastNameError('');
     setPhoneError('');
     setEmailError('');
+    setPasswordError('');
+    setConfirmPasswordError('');
+    setCheckboxError('');
 
     let hasError = false;
 
@@ -62,6 +75,22 @@ const RegisterScreen = () => {
       setEmailError('Укажите почту');
       hasError = true;
     }
+    if (!password.trim()) {
+      setPasswordError('Введите пароль');
+      hasError = true;
+    }
+    if (password.length < 6) {
+      setPasswordError('Пароль должен содержать минимум 6 символов');
+      hasError = true;
+    }
+    if (password !== confirmPassword) {
+      setConfirmPasswordError('Пароли не совпадают');
+      hasError = true;
+    }
+    if (!isChecked) {
+      setCheckboxError('Вы должны согласиться с условиями обработки данных');
+      hasError = true;
+    }
 
     // If any required field is empty, stop
     if (hasError) return;
@@ -72,6 +101,7 @@ const RegisterScreen = () => {
       lastName,
       phone,
       email,
+      password,
     });
   };
 
@@ -151,6 +181,13 @@ const RegisterScreen = () => {
                 if (emailError) setEmailError('');
               }}
               parentError={emailError}
+            />
+            <AppInput placeholder="Введите пароль" label="Пароль" value={password} onChangeValue={setPassword} parentError={passwordError} secureTextEntry />
+            <AppInput placeholder="Введите пароль еще раз" label="Подтвердите пароль" value={confirmPassword} onChangeValue={setConfirmPassword} parentError={confirmPasswordError} secureTextEntry />
+            <AppCheckbox 
+              label="Я согласен на получение новой информации о продуктах и услугах" 
+              checked={isChecked} 
+              onChange={setIsChecked} 
             />
           </View>
 
