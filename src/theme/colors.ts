@@ -10,12 +10,14 @@ const colors = {
   white: '#fff',
   black: '#000',
 
-  backgroundDark: '#212121',     // Dark mode background
+  backgroundDark: '#121212',     // Dark mode background
   backgroundLight: '#FFFFFF',    // Light mode background
   textPrimary: '#FFFFFF',        // Text color for dark mode (on dark backgrounds)
   textSecondary: '#000000',      // Text color for light mode (on light backgrounds)
+
   borderFocused: '#016FEE',      // Border color when focused in dark mode
   borderDefault: '#E3E5E5',      // Default border color for light mode
+  borderDark: '#303030',         // ✅ New border color for dark mode (dark gray)
 };
 
 export default colors;

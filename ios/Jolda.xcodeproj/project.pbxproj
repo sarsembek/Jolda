@@ -279,6 +279,8 @@
 				DEVELOPMENT_TEAM = 6PGX42V9KX;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Jolda/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Jolda - Твоя дорога начинается здесь!";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -307,6 +309,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6PGX42V9KX;
 				INFOPLIST_FILE = Jolda/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Jolda - Твоя дорога начинается здесь!";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -407,6 +411,7 @@
 		};
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-Jolda.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
