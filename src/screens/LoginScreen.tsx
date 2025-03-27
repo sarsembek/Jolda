@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -14,7 +14,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
   formatKazakhPhoneNumber,
   validateKazakhPhoneNumber,
-  validateEmail, // Make sure to import this
+  validateEmail,
 } from '../utils/validate';
 
 const LoginScreen = () => {
@@ -22,13 +22,49 @@ const LoginScreen = () => {
     useNavigation<StackNavigationProp<RootStackParamList, 'Login'>>();
   const theme = useTheme();
 
-  // 1) State to track whether we're using phone or email
-  // Initially false => use "email" mode
+  // Are we using phone or email for the first field?
   const [isPhone, setIsPhone] = useState(false);
 
-  // 2) Toggle function
+  // Controlled input states:
+  const [authValue, setAuthValue] = useState(''); // phone or email
+  const [authError, setAuthError] = useState('');
+
+  const [passwordValue, setPasswordValue] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  // Toggle function between phone & email
   const toggleAuthType = () => {
     setIsPhone(!isPhone);
+    // Clear the field & errors to avoid confusion
+    setAuthValue('');
+    setAuthError('');
+  };
+
+  // Called when user presses "Войти"
+  const handleLogin = () => {
+    // Reset any old errors
+    setAuthError('');
+    setPasswordError('');
+
+    let hasError = false;
+
+    // Check if first field is empty
+    if (!authValue.trim()) {
+      setAuthError('Заполните поле');
+      hasError = true;
+    }
+    // Check if password is empty
+    if (!passwordValue.trim()) {
+      setPasswordError('Введите пароль');
+      hasError = true;
+    }
+
+    // If either is empty, stop here
+    if (hasError) return;
+
+    // Otherwise, proceed with your flow (e.g., check validity, call API, etc.)
+    // For now, just navigate:
+    navigation.navigate('Home');
   };
 
   const styles = getStyles(theme);
@@ -39,12 +75,11 @@ const LoginScreen = () => {
         contentContainerStyle={styles.scrollContainer}
         enableOnAndroid={true}
         extraScrollHeight={10}
-        keyboardShouldPersistTaps="handled"
-      >
+        keyboardShouldPersistTaps="handled">
         {/* Back Button */}
         <View style={styles.header}>
           <AppButton onPress={() => navigation.goBack()} type="icon">
-            <ChevronLeftIcon />
+            <ChevronLeftIcon size={32}/>
           </AppButton>
         </View>
 
@@ -65,18 +100,35 @@ const LoginScreen = () => {
 
           {/* INPUT FIELDS */}
           <View style={styles.inputContainer}>
-            {/* Conditionally switch between Email vs. Phone */}
+            {/* Conditionally phone vs. email */}
             <AppInput
               label={isPhone ? 'Номер телефона' : 'Почта'}
               placeholder={isPhone ? '+7 (777) 777 77 77' : 'Email'}
-              // For phone, use phone format/validate; for email, no format + email validate.
               format={isPhone ? formatKazakhPhoneNumber : undefined}
               validate={isPhone ? validateKazakhPhoneNumber : validateEmail}
-              numeric={isPhone ? true : false}
+              numeric={isPhone}
+              // Controlled fields
+              value={authValue}
+              onChangeValue={val => {
+                setAuthValue(val);
+                // If user is typing, remove any "required" error
+                if (authError) setAuthError('');
+              }}
+              parentError={authError} // Show "Заполните поле" if empty
             />
 
             {/* Password */}
-            <AppInput label="Пароль" placeholder="Пароль" secureTextEntry />
+            <AppInput
+              label="Пароль"
+              placeholder="Пароль"
+              secureTextEntry
+              value={passwordValue}
+              onChangeValue={val => {
+                setPasswordValue(val);
+                if (passwordError) setPasswordError('');
+              }}
+              parentError={passwordError} // Show "Введите пароль" if empty
+            />
 
             <View style={styles.bottomContainer}>
               {/* Toggle link: switches phone/email mode */}
@@ -89,27 +141,21 @@ const LoginScreen = () => {
               {/* Forgot Password - aligned to the right */}
               <TouchableOpacity
                 style={styles.forgotPasswordContainer}
-                onPress={() => console.log('Forgot Password pressed')}
-              >
+                onPress={() => console.log('Forgot Password pressed')}>
                 <Text style={styles.forgotPassword}>Забыли пароль?</Text>
               </TouchableOpacity>
             </View>
           </View>
 
           {/* LOGIN BUTTON */}
-          <AppButton
-            title="Войти"
-            onPress={() => console.log('Login pressed')}
-            type="primary"
-          />
+          <AppButton title="Войти" onPress={handleLogin} type="primary" />
 
           {/* ALREADY HAVE AN ACCOUNT? */}
           <Text style={styles.noAccountText}>
             Нету аккаунта?{' '}
             <Text
               style={styles.registerText}
-              onPress={() => navigation.replace('Register')}
-            >
+              onPress={() => navigation.replace('Register')}>
               Зарегистрироваться
             </Text>
           </Text>
@@ -119,6 +165,8 @@ const LoginScreen = () => {
   );
 };
 
+export default LoginScreen;
+
 const getStyles = (theme: {background: string; text: string}) =>
   StyleSheet.create({
     container: {
@@ -127,7 +175,7 @@ const getStyles = (theme: {background: string; text: string}) =>
     },
     scrollContainer: {
       flexGrow: 1,
-      paddingHorizontal: 32,
+      paddingHorizontal: 24,
     },
     header: {
       alignItems: 'flex-start',
@@ -136,7 +184,7 @@ const getStyles = (theme: {background: string; text: string}) =>
       flexGrow: 1,
       alignItems: 'center',
       justifyContent: 'flex-start',
-      marginVertical: 32,
+      marginTop: 16,
     },
     logoContainer: {
       alignItems: 'center',
@@ -191,5 +239,3 @@ const getStyles = (theme: {background: string; text: string}) =>
       justifyContent: 'space-between',
     },
   });
-
-export default LoginScreen;

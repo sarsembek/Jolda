@@ -24,7 +24,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const theme: Theme = {
     background: isDark ? colors.backgroundDark : colors.backgroundLight,
     text: isDark ? colors.textPrimary : colors.textSecondary,
-    border: isDark ? colors.borderFocused : colors.borderDefault,
+    border: isDark ? colors.borderDark : colors.borderDefault,
     isDark,
   };
 
