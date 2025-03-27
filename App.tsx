@@ -10,6 +10,10 @@ import WelcomeScreen from './src/screens/WelcomeScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
+import SearchScreen from './src/screens/SearchScreen';
+import CarDetailScreen from './src/screens/CarDetailScreen';
+import CarModelDetailScreen from './src/screens/CarModelDetailScreen';
+import MakingAnOrderScreen from './src/screens/MakingAnOrderScreen';
 
 const Stack = createStackNavigator();
 
@@ -70,6 +74,19 @@ const AppContent = (): React.JSX.Element => {
 
         {/* HOME SCREEN */}
         <Stack.Screen name="Home" component={HomeScreen} />
+
+        {/* Добавляем SearchScreen */}
+        <Stack.Screen name="Search" component={SearchScreen} />
+
+        {/* Добавляем CarDetailScreen */}
+        <Stack.Screen name="CarDetail" component={CarDetailScreen} />
+
+        {/* Добавляем CarModelDetailScreen */}
+        <Stack.Screen name="CarModelDetail" component={CarModelDetailScreen} />
+
+        {/* Добавляем MakingAnOrderScreen */}
+        <Stack.Screen name="MakingAnOrder" component={MakingAnOrderScreen} />
+        
       </Stack.Navigator>
     </View>
   );

@@ -16,6 +16,8 @@ import {
   validateKazakhPhoneNumber,
   validateEmail,
 } from '../utils/validate';
+import axios from 'axios';
+
 
 const LoginScreen = () => {
   const navigation =
@@ -41,30 +43,75 @@ const LoginScreen = () => {
   };
 
   // Called when user presses "Войти"
-  const handleLogin = () => {
-    // Reset any old errors
+  // const handleLogin = () => {
+  //   // Reset any old errors
+  //   setAuthError('');
+  //   setPasswordError('');
+
+  //   let hasError = false;
+
+  //   // Check if first field is empty
+  //   if (!authValue.trim()) {
+  //     setAuthError('Заполните поле');
+  //     hasError = true;
+  //   }
+  //   // Check if password is empty
+  //   if (!passwordValue.trim()) {
+  //     setPasswordError('Введите пароль');
+  //     hasError = true;
+  //   }
+
+  //   // If either is empty, stop here
+  //   if (hasError) return;
+
+  //   // Otherwise, proceed with your flow (e.g., check validity, call API, etc.)
+  //   // For now, just navigate:
+  //   navigation.navigate('Home');
+  // };
+
+
+  const handleLogin = async () => {
     setAuthError('');
     setPasswordError('');
-
+  
     let hasError = false;
-
-    // Check if first field is empty
+  
     if (!authValue.trim()) {
       setAuthError('Заполните поле');
       hasError = true;
     }
-    // Check if password is empty
     if (!passwordValue.trim()) {
       setPasswordError('Введите пароль');
       hasError = true;
     }
-
-    // If either is empty, stop here
     if (hasError) return;
-
-    // Otherwise, proceed with your flow (e.g., check validity, call API, etc.)
-    // For now, just navigate:
-    navigation.navigate('Home');
+  
+    try {
+      const response = await axios.post(
+        'https://83ed-89-218-54-186.ngrok-free.app/auth/login',
+        {
+          email: isPhone ? null : authValue, // Если почта
+          phone: isPhone ? authValue : null, // Если телефон
+          password: passwordValue,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      if (response.status === 200) {
+        console.log('Успешный вход:', response.data);
+        navigation.navigate('CarDetail'); // Или другой экран
+      } else {
+        console.log('Ошибка входа:', response.data);
+        setAuthError('Неверные данные');
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      setAuthError('Ошибка сервера');
+    }
   };
 
   const styles = getStyles(theme);
@@ -148,7 +195,10 @@ const LoginScreen = () => {
           </View>
 
           {/* LOGIN BUTTON */}
-          <AppButton title="Войти" onPress={handleLogin} type="primary" />
+
+          {/* <AppButton title="Войти" onPress={handleLogin} type="primary" /> */}
+          <AppButton title="Войти" onPress={() => navigation.navigate('CarDetail')} type="primary" />
+          
 
           {/* ALREADY HAVE AN ACCOUNT? */}
           <Text style={styles.noAccountText}>
