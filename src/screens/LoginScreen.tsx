@@ -16,7 +16,6 @@ import {
   validateKazakhPhoneNumber,
   validateEmail,
 } from '../utils/validate';
-import axios from 'axios';
 
 
 const LoginScreen = () => {
@@ -43,76 +42,74 @@ const LoginScreen = () => {
   };
 
   // Called when user presses "Войти"
-  // const handleLogin = () => {
-  //   // Reset any old errors
-  //   setAuthError('');
-  //   setPasswordError('');
-
-  //   let hasError = false;
-
-  //   // Check if first field is empty
-  //   if (!authValue.trim()) {
-  //     setAuthError('Заполните поле');
-  //     hasError = true;
-  //   }
-  //   // Check if password is empty
-  //   if (!passwordValue.trim()) {
-  //     setPasswordError('Введите пароль');
-  //     hasError = true;
-  //   }
-
-  //   // If either is empty, stop here
-  //   if (hasError) return;
-
-  //   // Otherwise, proceed with your flow (e.g., check validity, call API, etc.)
-  //   // For now, just navigate:
-  //   navigation.navigate('Home');
-  // };
-
-
-  const handleLogin = async () => {
+  const handleLogin = () => {
+    // Reset any old errors
     setAuthError('');
     setPasswordError('');
-  
+
     let hasError = false;
-  
+
+    // Check if first field is empty
     if (!authValue.trim()) {
       setAuthError('Заполните поле');
       hasError = true;
     }
+    // Check if password is empty
     if (!passwordValue.trim()) {
       setPasswordError('Введите пароль');
       hasError = true;
     }
-    if (hasError) return;
-  
-    try {
-      const response = await axios.post(
-        'https://83ed-89-218-54-186.ngrok-free.app/auth/login',
-        {
-          email: isPhone ? null : authValue, // Если почта
-          phone: isPhone ? authValue : null, // Если телефон
-          password: passwordValue,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-  
-      if (response.status === 200) {
-        console.log('Успешный вход:', response.data);
-        navigation.navigate('CarDetail'); // Или другой экран
-      } else {
-        console.log('Ошибка входа:', response.data);
-        setAuthError('Неверные данные');
-      }
-    } catch (error) {
-      console.error('Ошибка:', error);
-      setAuthError('Ошибка сервера');
+
+    // If either is empty, stop here
+    if (hasError) {
+      return;
     }
+
+    // Otherwise, proceed with your flow (e.g., check validity, call API, etc.)
+    // For now, just navigate:
+    navigation.navigate('Home');
   };
+
+
+  // const handleLogin = async () => {
+  //   setAuthError('');
+  //   setPasswordError('');
+  //   let hasError = false;
+  //   if (!authValue.trim()) {
+  //     setAuthError('Заполните поле');
+  //     hasError = true;
+  //   }
+  //   if (!passwordValue.trim()) {
+  //     setPasswordError('Введите пароль');
+  //     hasError = true;
+  //   }
+  //   if (hasError) return;
+  //   try {
+  //     const response = await axios.post(
+  //       'https://83ed-89-218-54-186.ngrok-free.app/auth/login',
+  //       {
+  //         email: isPhone ? null : authValue, // Если почта
+  //         phone: isPhone ? authValue : null, // Если телефон
+  //         password: passwordValue,
+  //       },
+  //       {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //       }
+  //     );
+  //     if (response.status === 200) {
+  //       console.log('Успешный вход:', response.data);
+  //       navigation.navigate('CarDetail'); // Или другой экран
+  //     } else {
+  //       console.log('Ошибка входа:', response.data);
+  //       setAuthError('Неверные данные');
+  //     }
+  //   } catch (error) {
+  //     console.error('Ошибка:', error);
+  //     setAuthError('Ошибка сервера');
+  //   }
+  // };
 
   const styles = getStyles(theme);
 
@@ -159,7 +156,9 @@ const LoginScreen = () => {
               onChangeValue={val => {
                 setAuthValue(val);
                 // If user is typing, remove any "required" error
-                if (authError) setAuthError('');
+                if (authError) {
+                  setAuthError('');
+                }
               }}
               parentError={authError} // Show "Заполните поле" if empty
             />
@@ -172,7 +171,9 @@ const LoginScreen = () => {
               value={passwordValue}
               onChangeValue={val => {
                 setPasswordValue(val);
-                if (passwordError) setPasswordError('');
+                if (passwordError) {
+                  setPasswordError('');
+                }
               }}
               parentError={passwordError} // Show "Введите пароль" if empty
             />
@@ -197,9 +198,7 @@ const LoginScreen = () => {
           {/* LOGIN BUTTON */}
 
           {/* <AppButton title="Войти" onPress={handleLogin} type="primary" /> */}
-          <AppButton title="Войти" onPress={() => navigation.navigate('CarDetail')} type="primary" />
-          
-
+          <AppButton title="Войти" onPress={() => handleLogin} type="primary" />
           {/* ALREADY HAVE AN ACCOUNT? */}
           <Text style={styles.noAccountText}>
             Нету аккаунта?{' '}
